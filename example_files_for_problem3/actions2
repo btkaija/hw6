@@ -1,0 +1,8 @@
+sort	ItemID
+dump
+sort	Warehouse
+dump
+del	R33333
+add	R44444	MUX 74138	                        0.24	0.14	444	4000
+sort	ItemID
+dump
