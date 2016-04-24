@@ -6,7 +6,7 @@ element vertex 5
 property float32 x
 property float32 y
 property float32 z
-element face 7
+element face 6
 property list uint8 int32 vertex_index
 end_header
 0.0 0.0 0.0

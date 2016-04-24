@@ -15,6 +15,7 @@ except:
 	sys.exit("unable to open file: "+name)
 
 lines = f.readlines()
+f.close()
 
 for l in lines:
 
