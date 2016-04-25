@@ -3,6 +3,7 @@
 
 import sys
 from collections import namedtuple
+from operator import attrgetter
 Item = namedtuple("Item", "item_id descrip qty_1 qty_10 floor whse")
 
 #error checking crap...
@@ -32,8 +33,27 @@ for l in data_lines:
 		new_item = Item(i[0], i[1], float(i[2]), float(i[3]), int(i[4]), int(i[5]))
 		inventory_data.append(new_item)
 
-def _sort(data, type):
-	pass
+def _sort(data, field):
+	sort_field = ''
+	
+	if field == "ItemID":
+		data = sorted(data, key=attrgetter('item_id'))
+	elif field == "Description":
+		data = sorted(data, key=attrgetter('descrip'))
+	elif field == "Quantity1":
+		data = sorted(data, key=attrgetter('qty_1'))
+	elif field == "Quantity10":
+		data = sorted(data, key=attrgetter('qty_10'))
+	elif field == "Floor":
+		data = sorted(data, key=attrgetter('floor'))
+	elif field == "Warehouse":
+		data = sorted(data, key=attrgetter('whse'))
+	else:
+		sys.exit("the field: "+field+" is not a valid sort key")
+
+	return data
+
+
 
 def _dump(data):
 	inventory_data = data
@@ -49,10 +69,18 @@ def _dump(data):
 		print "{0:6}".format(d.whse)
 
 def _add(data, line):
-	pass
+	print line
+	new_item = Item(line[0], line[1], line[2], line[3], line[4], line[5])
+	data.append(new_item)
+	return data
 
-def _del(data, line):
-	pass
+def _del(data, item_id):
+	for d in data:
+		if d.item_id == item_id:
+			pos = data.index(d)
+			del data[pos]
+			return data
+
 
 
 #parsing cmd file
@@ -62,23 +90,26 @@ has_not_sorted = True
 
 for l in cmd_lines:
 	args = l.split('\t')
+	args = [x.strip() for x in args if x]
+	print args
 	if "dump" == args[0]:
-		print "do dump command"
+		#print "do dump command"
 		if has_not_sorted:
-			_sort(inventory_data, "ItemID")
-		_dump()
+			inventory_data = _sort(inventory_data, "ItemID")
+		_dump(inventory_data)
 
 	elif "sort" == args[0]:
-		print "do sort command"
-		_sort(inventory_data, args[1])
+		has_not_sorted = False
+		#print "do sort command"
+		inventory_data = _sort(inventory_data, args[1])
 
 	elif "add" == args[0]:
-		print "do add command"
-		_add(inventory_data, args[1])
+		#print "do add command"
+		inventory_data = _add(inventory_data, args[1:])
 
 	elif "del" == args[0]:
-		print "do del command"
-		_del(inventory_data, args[1])
+		#print "do del command"
+		inventory_data = _del(inventory_data, args[1])
 
 	else:
 		sys.exit(l+" is not a valid command")
