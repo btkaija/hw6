@@ -69,7 +69,7 @@ def _dump(data):
 		print "{0:6}".format(d.whse)
 
 def _add(data, line):
-	print line
+	#print line
 	new_item = Item(line[0], line[1], line[2], line[3], line[4], line[5])
 	data.append(new_item)
 	return data
@@ -80,6 +80,7 @@ def _del(data, item_id):
 			pos = data.index(d)
 			del data[pos]
 			return data
+	return data
 
 
 
